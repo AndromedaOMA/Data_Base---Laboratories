@@ -1,0 +1,52 @@
+1.Scrieți o interogare pentru a afișa numele, prenumele, anul de studiu si data nașterii pentru toți studenții. Editați în SQL*Plus și executați. Salvați apoi interogarea intr-un fișier numit p1.sql.
+	SELECT nume, prenume, an, data_nastere FROM studenti;
+	SAVE p1 CREATE
+
+2.Scrieți și executați o interogare pentru a afișa în mod unic valorile burselor.
+	SELECT DISTINCT bursa FROM studenti WHERE bursa IS NOT NULL;
+3.Încărcați fișierul p1.sql în buffer. Dați fiecărei coloane din clauza SELECT un alias. Executați înterogarea.
+	SELECT nume as "Nume nou", prenume as "Prenume nou", an an2, data_nastere "Data Nas" FROM studenti;
+
+4.Afișați numele concatenat cu prenumele urmat de virgulă și anul de studiu. Ordonați crescător după anul de studiu. Denumiți coloana “Studenți pe ani de studiu”.
+	SELECT CONCAT(CONCAT(CONCAT(nume, prenume),','),an) as "STUDENTI PE ANI DE STUDIU" FROM studenti ORDER BY an ASC;
+	SELECT nume||prenume||','||an as "Studenti pe an de studiu" FROM studenti ORDER BY an ASC; 
+
+5.Afișați numele, prenumele și data de naștere a studenților născuți între 1 ianuarie 1995 si 10 iunie 1997. Ordonați descendent după anul de studiu.
+	SELECT nume, prenume, data_nastere from studenti WHERE data_nastere BETWEEN '01/01/1995' AND '10/06/1997' ORDER BY an DESC;
+	SELECT nume, prenume, data_nastere from studenti WHERE data_nastere BETWEEN TO_DATE('01/01/1995', 'DD/MM/YYYY') AND TO_DATE('10/06/1997','DD/MM/YYYY') ORDER BY an DESC;
+	SELECT nume, prenume, data_nastere from studenti WHERE data_nastere >= '01/01/1995' AND data_nastere <= '10/06/1997' ORDER BY an DESC;
+
+6.Afișați numele și prenumele precum și anii de studiu pentru toți studenții născuți în 1995.
+	SELECT nume, prenume, data_nastere from studenti WHERE TO_CHAR(data_nastere, 'yyyy')=1995;
+	SELECT nume, prenume, data_nastere from studenti EXTRACT(year from data_nastere)=1995;
+	SELECT nume, prenume, data_nastere from studenti WHERE data_nastere LIKE '%95';
+
+7.Afișați studenții (toate informațiile pentru aceștia) care nu iau bursă.
+	SELECT * FROM studenti WHERE bursa IS NULL;
+
+8.Afișați studenții (nume și prenume) care iau bursă și sunt în anii 2 și 3 de studiu. Ordonați alfabetic ascendent după nume și descendent după prenume.
+	SELECT nume, prenume FROM studenti WHERE bursa IS NOT NULL AND (an=2 OR an=3) ORDER BY nume ASC, prenume DESC;
+	SELECT nume, prenume FROM studenti WHERE bursa IS NOT NULL AND an = SOME(2,3) ORDER BY prenume DESC, prenume DESC;
+
+9.Afișați studenții care iau bursă, precum și valoarea bursei dacă aceasta ar fi mărită cu 15%.
+	SELECT nume, prenume, bursa+0.15*bursa FROM studenti WHERE bursa IS NOT NULL;
+
+10.Afișați studenții al căror nume începe cu litera P și sunt în anul 1 de studiu.
+	SELECT * FROM studenti WHERE nume LIKE('P%') AND an=1;
+
+11.Afișați toate informațiile despre studenții care au două apariții ale literei “a” în prenume.
+	SELECT * FROM studenti WHERE prenume LIKE '%a%a%' OR prenume LIKE 'A%a%';
+
+12.Afișați toate informațiile despre studenții al căror prenume este “Alexandru”, “Ioana” sau “Marius”.
+	SELECT * FROM studenti WHERE prenume='Alexandru' or prenume='Ioana' or prenume='Marius';
+	SELECT * FROM studenti WHERE prenume IN ('Alexandru','Ioana','Marius');
+
+13.Afișați studenții bursieri din semianul A.
+	SELECT * FROM studenti WHERE bursa IS NOT NULL AND grupa LIKE('A%');
+
+14.Afișați toate informatiile despre studentii ale caror prenume contine EXACT o singura data litera 'a' (se ignora litera 'A' de la inceputul unor prenume).
+	SELECT * FROM studenti WHERE LENGTH(REPLACE(prenume, 'a', ''))=LENGTH(prenume)-1;
+	SELECT * FROM studenti WHERE prenume LIKE '%a%' AND prenume IS NOT LIKE '%a%a%';
+
+15.Afişaţi numele şi prenumele profesorilor a căror prenume se termină cu litera "n" (întrebare capcană).
+	SELECT nume, prenume FROM profesori WHERE TRIM(prenume) LIKE '%n';

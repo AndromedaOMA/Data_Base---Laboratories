@@ -4,6 +4,7 @@
 
 2.Scrieți și executați o interogare pentru a afișa în mod unic valorile burselor.
 	SELECT DISTINCT bursa FROM studenti WHERE bursa IS NOT NULL;
+
 3.Încărcați fișierul p1.sql în buffer. Dați fiecărei coloane din clauza SELECT un alias. Executați înterogarea.
 	SELECT nume as "Nume nou", prenume as "Prenume nou", an an2, data_nastere "Data Nas" FROM studenti;
 

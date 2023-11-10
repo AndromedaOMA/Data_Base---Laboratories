@@ -1,0 +1,61 @@
+1. Afișați numărul de studenți din fiecare an.
+	SELECT an, COUNT(nume) FROM studenti GROUP BY an;
+	SELECT an, COUNT(NVL(bursa, 0)) FROM studenti GROUP BY an;
+
+2. Afișați numărul de studenți din fiecare grupă a fiecărui an de studiu. Ordonați crescător după anul de studiu și după grupă.
+	SELECT an, grupa, COUNT(*) AS "nr studenti" FROM studenti GROUP BY an, grupa ORDER BY an, grupa;
+
+3. Afișați numărul de studenți din fiecare grupă a fiecărui an de studiu și specificați câți dintre aceștia sunt bursieri.
+	SELECT grupa, an, COUNT(*) AS "nr studenti", COUNT(bursa) AS "nr bursieri" FROM studenti GROUP BY grupa, an;
+
+4. Afișați suma totală cheltuită de facultate pentru acordarea burselor.
+	SELECT SUM(NVL(bursa,0)) FROM studenti;
+	SELECT SUM(bursa) FROM studenti;
+
+5. Afișați valoarea bursei/cap de student (se consideră că studentii care nu sunt bursieri primesc 0 RON); altfel spus: cât se cheltuiește în medie pentru un student?
+	SELECT AVG(NVL(bursa,0)) FROM studenti;
+
+
+6. Afișați numărul de note de fiecare fel (câte note de 10, câte de 9,etc.). Ordonați descrescător după valoarea notei.
+	SELECT valoare, COUNT(valoare) FROM note GROUP BY valoare ORDER BY valoare DESC;
+
+7. Afișați numărul de note pus în fiecare zi a săptămânii. Ordonați descrescător după numărul de note.
+	SELECT COUNT(valoare), TO_CHAR(data_nastere, 'Day') FROM note GROUP BY TO_CHAR(data_nastere, 'Day') ORDER BY COUNT(valoare) DESC;
+
+8. Afișați numărul de note pus în fiecare zi a săptămânii. Ordonați crescător după ziua saptamanii: Sunday, Monday, etc.
+	SELECT COUNT(*), TO_CHAR(data_nastere, 'Day') FROM note GROUP BY TO_CHAR(data_nastere, 'Day'), TO_CHAR(data_nastere, 'D') ORDER BY TO_CHAR(data_nastere, 'D');
+
+9. Afișați pentru fiecare elev care are măcar o notă, numele și media notelor sale. Ordonați descrescător după valoarea mediei.
+	SELECT s.nume, AVG(n.valoare) AS "media" FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol GROUP BY s.nume,s.nr_matricol ORDER BY AVG(n.valoare) DESC;
+
+10. Modificați interogarea anterioară pentru a afișa și elevii fără nici o notă. Media acestora va fi null.
+	SELECT s.nume, AVG(n.valoare) AS "media" FROM studenti s LEFT JOIN note n ON s.nr_matricol=n.nr_matricol ORDER BY AVG(n.valoare) DESC;
+
+11. Modificați interogarea anterioară pentru a afișa pentru elevii fără nici o notă media 0.
+	SELECT s.nume, AVG(NVL(n.valoare,0)) AS "media" FROM studenti s LEFT JOIN note n ON s.nr_matricol=n.nr_matricol ORDER BY AVG(n.valoare) DESC;
+
+12. Modificati interogarea de mai sus pentru a afisa doar studentii cu media mai mare ca 8.
+	SELECT s.nume, AVG(n.valoare) AS "media" FROM studenti s LEFT JOIN note n ON s.nr_matricol=n.nr_matricol GROUP BY s.nume, s.nr_matricol HAVING AVG(n.valoare)>8 ORDER BY AVG(n.valoare) DESC;
+
+13. Afișați numele, cea mai mare notă, cea mai mică notă și media doar pentru acei studenti care au primit doar note mai mari sau egale cu 7 (au cea mai mică notă mai mare sau egală cu 7).
+	SELECT s.nume, MIN(n.valoare), MAX(n.valoare), AVG(n.valoare) FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol GROUP BY s.nr_matricol, s.nume HAVING MIN(n.valoare)>=7;
+
+14. Afișați numele și mediile studenților care au cel puțin un număr de 3 note puse în catalog.
+	SELECT s.nume, AVG(n.valoare) FROM studenti s JOIN note n ON n.nr_matricol=s.nr_matricol FROUP BY s.nr_matricol, s.note HAVING COUNT(n.valoare)>3;
+
+15. Afișați numele și mediile studenților care au cel puțin un număr de 3 note diferite puse în catalog.
+	SELECT s.nume, AVG(n.valoare) FROM studenti s JOIN note n ON n.nr_matricol=s.nr_matricol GROUP BY s.nr_matricol, s.note HAVING COUNT(DISTINCT n.valoare)>=3;
+
+16. Afișați numele și mediile studenților din grupa A2 anul 3.
+	SELECT s.nume, AVG(N.valoare) FROM stidenti s JOIN note n ON n.nr_matricol=s.nr_matricol WHERE an=3 AND grupa LIKE 'A2' GROUP BY s.nr_matricol, s.nume;
+
+17. Afișați cea mai mare medie obținută de vreun student. Puteți să afișați și numărul matricol al studentului care are acea medie maximală ? 
+Argumentați.
+	SELECT MAX(AVG(valoare)) FROM note GROUP BY nr_matricol;
+
+18. Un profesor este iubit de studenti daca pune note mai mari (adica media notelor sale este mai mare). Afisati toti profesorii in ordinea 
+preferintelor studentilor impreuna cu mediile notelor puse de ei scrise cu doua zecimale .
+
+
+19. Afisati numarul de restantieri generati de FIECARE profesor (tip: 1 cu 2 restantieri, 4 cu 1 restantier, 11 cu 0 restantieri)
+

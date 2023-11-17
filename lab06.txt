@@ -51,7 +51,7 @@
 
 17. Afișați cea mai mare medie obținută de vreun student. Puteți să afișați și numărul matricol al studentului care are acea medie maximală ? 
 Argumentați.
-	SELECT MAX(AVG(valoare)) FROM note GROUP BY nr_matricol;
+	SELECT MAX(AVG(valoare)) FROM note GROUP BY nr_matricol; + pe tel.
 
 18. Un profesor este iubit de studenti daca pune note mai mari (adica media notelor sale este mai mare). Afisati toti profesorii in ordinea 
 preferintelor studentilor impreuna cu mediile notelor puse de ei scrise cu doua zecimale .

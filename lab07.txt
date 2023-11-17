@@ -1,0 +1,33 @@
+1. Afișați numele studenților care iau cea mai mare bursa acordată.
+	SELECT nume, prenume, bursa FROM studenti WHERE bursa = (SELECT MAX(bursa) FROM studenti);
+
+2. Afișați numele studenților care sunt colegi cu un student pe nume Arhire (coleg = același an si aceeași grupă).
+	SELECT nume FROM studenti WHERE (an,grupa) IN (SELECT an,grupa FROM studenti WHERE nume='Arhire') AND nume!='Arhie';
+
+3. Pentru fiecare grupă afișați numele studenților care au obținut cea mai mică notă la nivelul grupei.
+	SELECT s.nume FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol WHERE (n.valoare, s.an, s.grupa) IN (SELECT MIN(n.valoare), s.an, s.grupa FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol GROUP BY s.an, s.grupa);
+
+4. Identificați studenții a căror medie este mai mare decât media tuturor notelor din baza de date. Afișați numele și media acestora.
+	SELECT s.nume, AVG(n.valoare) FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol GROUP BY s.nr_matricol, s.nume HAVING AVG(n.valoare)> (SELECT AVG(valoare) FROM note);
+
+5. Afișați numele și media primilor trei studenți ordonați descrescător după medie.
+	SELECT * FORM ( SELECT s.nume, AVG(n.valoare) AS "medie" FROM studenti JOIN note n ON s.nr_matricol=n.nr_matricol GROUP BY s.nume, s.nr_matricol ORDER BY AVG(valoare) DESC) WHERE ROWNUM<4;
+
+6. Afișați numele studentului (studenților) cu cea mai mare medie precum și valoarea mediei (atenție: limitarea numărului de linii poate elimina studenții de pe poziții egale; găsiți altă soluție).
+	SELECT s.nume, s.prenume, AVG(n.valoare) FROM studenti JOIN note n ON s.nr_matricol=n.nr_matricol GROUP BY s.nr_matricol, s.nume, s.prenume HAVING AVG(n.valoare)=(SELECT MAX(AVG(n.valoare)) FROM studenti JOIN note n ON s.nr_matricol=n.nr_matricol GROUP BY nr_matricol);
+
+7. Afişaţi numele şi prenumele tuturor studenţilor care au luat aceeaşi nota ca şi Ciprian Ciobotariu la materia Logică. Excludeţi-l pe acesta din listă. (Se știe în mod cert că există un singur Ciprian Ciobotariu și că acesta are o singură notă la logică)
+	SELECT nume, prenume FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol WHERE valoare = (SELECT valoare FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol JOIN cursuri c ON n.id_curs=c.id_curs WHERE (nume,prenume,titlu_curs) = (('Ciobotariu','Ciprian','Logica')) AND s.nr_matricol <>(SELECT nr_matricol FROM studenti WHERE (nume, prenume) = (('Ciobotariu ','Ciprian');
+
+8. Din tabela studenti, afisati al cincilea prenume in ordine alfabetica.
+	SELECT * FROM (SELECT * FROM studenti ORDER BY prenume) WHERE ROWNUM<=5
+	MINUS
+	SLECT * FROM (SELECT * FROM studenti ORDER BY prenume) WHERE ROWNUM<=4;
+     sau-----------
+	SELECT * FROM (SELECT * FROM (SELECT * FROM studenti ORDER BY prenume) WHERE ROWNUM<=5 ORDER BY prenume DESC)WHERE ROWNUM=1;
+
+9. Punctajul unui student se calculeaza ca fiind o suma intre produsul dintre notele luate si creditele la materiile la care au fost luate notele. Afisati toate informatiile studentului care este pe locul 3 in acest top.
+	SELECT * FROM (SELECT * FROM ( SELECT s.nr_matricol, s.nume, SUM(n.valoare * c.credite) media FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol JOIN cursuri c ON c.id_curs=n.id_curs GROUP BY s.nr_matricol, s.nume ORDER BY SUM(n.valoare*c.credite) DESC) WHERE ROWNUM < 4 ORDER BY media) WHERE ROWNUM<2;
+
+10. Afișați studenții care au notă maximă la o materie precum și nota și materia respectivă.
+	SELECT nume,prenume, n.valoare, c.titlu_curs FROM studenti s JOIN note n ON N.NR_MATRICOL=S.NR_MATRICOL JOIN cursuri c ON c.id_curs=n.id_curs WHERE (n.valoare,c.titlu_curs) IN (SELECT MAX(valoare),titlu_curs FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol JOIN cursuri c ON c.id)curs=n.id)curs GROUP BY titlu_curs);

@@ -1,0 +1,42 @@
+1. Afişaţi toţi studenţii care au în an cu ei măcar un coleg care să fie mai mare ca ei (vezi data naşterii). Atentie, un student s1 este mai mare daca are data_nastere mai mica decat celalat student s2.
+	SELECT s1.nume, s1.prenume, s1.data_nastere FROM studenti s1 WHERE EXISTS (SELECT * FROM studenti s2 WHERE s1.an = s2.an AND s1.data_nastere > s2.data_nastere);
+
+2. Afişaţi toţi studenţii care au media mai mare decât media tuturor notelor colegilor din an cu ei. Pentru aceştia afişaţi numele, prenumele şi media lor.
+	SELECT nume, prenume, AVG(valoare)
+FROM studenti s1 JOIN note n1 ON s1.nr_matricol = n1.nr_matricol
+GROUP BY s1.nr_matricol, nume, prenume, an
+HAVING AVG(valoare) >
+       (
+           SELECT AVG(valoare)
+           FROM studenti s2 JOIN note n2 ON s2.nr_matricol = n2.nr_matricol
+           WHERE s1.an = s2.an
+       );
+
+3. Afişaţi numele, prenumele si grupa celui mai bun student din fiecare grupa în parte.
+	 select nume, prenume, grupa, an from studenti s1 join note n1 on s1.nr_matricol = n1.nr_matricol group by s1.nr_matricol, nume, prenume, an, grupa having avg(valoare) = (select max(avg(valoare)) from studenti s2 join note n2 on s2.nr_matricol = n2.nr_matricol where s1.grupa = s2.grupa and s1.an=s2.an group by s2.nr_matricol);
+
+4. Găsiţi toţi studenţii care au măcar un coleg în acelaşi an care să fi luat aceeaşi nota ca şi el la măcar o materie.
+	SELECT UNIQUE S1.NUME, S1.PRENUME FROM STUDENTI S1 JOIN NOTE N1 ON S1.NR_MATRICOL=N1.NR_MATRICOL WHERE EXISTS (SELECT 'A' FROM STUDENTI S2 JOIN NOTE N2 ON S2.NR_MATRICOL = N2.NR_MATRICOL WHERE S1.NR_MATRICOL!=S2.NR_MATRICOL AND S1.AN=S2.AN AND N1.VALOARE=N2.VALOARE);
+
+5. Afișați toți studenții care sunt singuri în grupă (nu au alți colegi în aceeași grupă).
+	SELECT CONCAT(CONCAT(s.nume, '_'), s.prenume) AS nume_student
+FROM studenti s
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM studenti s2
+    WHERE s.grupa = s2.grupa AND s.nr_matricol <> s2.nr_matricol AND s.an = s2.an
+);
+
+6. Afișați profesorii care au măcar un coleg (profesor) ce are media notelor puse la fel ca și el.
+	select p1.nume, p1.prenume from profesori p1 join didactic d1 on p1.id_prof = d1.id_prof join note n1 on d1.id_curs = n1.id_curs group by p1.id_prof, p1.nume, p1.prenume having avg(n1.valoare) in (select avg(n2.valoare) from profesori p2 join didactic d2 on p2.id_prof = d2.id_prof join note n2 on d2.id_curs = n2.id_curs where p1.id_prof != p2.id_prof group by p2.id_prof);
+
+7. Fara a folosi join, afisati numele si media fiecarui student.
+	SELECT nume, (SELECT AVG(valoare) FROM note GROUP BY note.nr_matricol HAVING note.nr_matricol = studenti.nr_matricol) AS medie FROM studenti;
+
+8. Afisati cursurile care au cel mai mare numar de credite din fiecare an (pot exista si mai multe pe an). - Rezolvati acest exercitiu si corelat si necorelat (se poate in ambele moduri). Care varianta este mai eficienta ?
+	varianta corelata:
+ select c1.titlu_curs from CURSURI c1 where c1.credite in (select max(c.credite) from cursuri c where c.an = c1.an group by c.an);
+	varianta necorelata:
+ select c1.titlu_curs from CURSURI c1 where (c1.credite, c1.an) in (select max(c.credite), c.an from cursuri c group by c.an);
+
+	

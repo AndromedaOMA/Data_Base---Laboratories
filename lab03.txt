@@ -42,5 +42,3 @@
 13. Pentru studentii bursieri (doar pentru ei) afisati numele studentului si bursa in stelute: fiecare steluta valoreaza 50 RON. In tabel, alineati stelutele la dreapta.
 	SELECT nume,substr(rpad(bursa,3+bursa/50,'*'),4) FROM studenti where bursa is not null;
 	SELECT nume, bursa, LPAD(LPAD('*', (bursa/50), '*'), 10, '_') "bursa noua" FROM studenti WHERE bursa IS NOT NULL;
-
-email: cornei.laura10@gmail.com

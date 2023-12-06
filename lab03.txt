@@ -24,7 +24,7 @@
 	SELECT nume, data_nastere, ADD_MONTHS(data_nastere,CEIL(MONTHS_BETWEEN(CURRENT-DATE, data_nastere)/12)*12), NEXT_DAY(CEIL(MONTHS_BETWEEN(CURRENT-DATE, data_nastere)/12)*12),'SUNDAY');
 
 8. Ordonați studenții care nu iau bursă în funcție de luna cand au fost născuți; se va afișa doar numele, prenumele și luna corespunzătoare datei de naștere.
-	SELECT nume, data_nastere, to_char(data_nastere,'mm') FROM studenti;
+	SELECT nume, data_nastere, to_char(data_nastere,'mm') FROM studenti WHERE bursa IS NULL;
 
 9. Pentru fiecare student afișati numele, valoarea bursei si textul: 'premiul 1' pentru valoarea 450, 'premiul 2' pentru valoarea 350, 'premiul 3' pentru valoarea 250 și 'mentiune' pentru cei care nu iau bursa. Pentru cea de a treia coloana dati aliasul "Premiu".
 	SELECT nume, bursa, DECODE(bursa, 450,' premiul 1', 350, 'premiul 2', 250, 'premiul 3', NULL, 'mentiune') FROM studenti;

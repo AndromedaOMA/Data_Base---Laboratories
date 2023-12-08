@@ -9,7 +9,7 @@
 	UPDATE studenti SET bursa=500 WHERE nr_matricol IN (SELECT s.nr_matricol FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol WHERE n.valoare=10);
 
 2. Toti studentii primesc o bursa egala cu 100*media notelor lor. Efectuati modificarile necesare.
-	UPDATE studenti S SET bursa=(SELECT AVG(n.valoare)*100 FROM note n WHERE s.nr_matricol=s.nr_mtricol);
+	UPDATE studenti SET bursa=(SELECT AVG(valoare)*100 FROM note);
 
 +DELETE
 1. Stergeti toti studentii care nu au nici o nota.

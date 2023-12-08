@@ -27,6 +27,7 @@
 
 9. Afișați pentru fiecare elev care are măcar o notă, numele și media notelor sale. Ordonați descrescător după valoarea mediei.
 	SELECT s.nume, AVG(n.valoare) AS "media" FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol GROUP BY s.nume,s.nr_matricol ORDER BY AVG(n.valoare) DESC;
+	SELECT s.nume, AVG(n.valoare) AS "media" from studenti s JOIN note n ON s.nr_matricol=n.nr_matricol GROUP BY s.nume ORDER BY s.nume DESC;
 
 10. Modificați interogarea anterioară pentru a afișa și elevii fără nici o notă. Media acestora va fi null.
 	SELECT s.nume, AVG(n.valoare) AS "media" FROM studenti s LEFT JOIN note n ON s.nr_matricol=n.nr_matricol ORDER BY AVG(n.valoare) DESC;

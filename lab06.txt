@@ -30,10 +30,10 @@
 	SELECT s.nume, AVG(n.valoare) AS "media" from studenti s JOIN note n ON s.nr_matricol=n.nr_matricol GROUP BY s.nume ORDER BY s.nume DESC;
 
 10. Modificați interogarea anterioară pentru a afișa și elevii fără nici o notă. Media acestora va fi null.
-	SELECT s.nume, AVG(n.valoare) AS "media" FROM studenti s LEFT JOIN note n ON s.nr_matricol=n.nr_matricol ORDER BY AVG(n.valoare) DESC;
+	SELECT s.nume, AVG(n.valoare) AS "media" FROM studenti s LEFT JOIN note n ON s.nr_matricol=n.nr_matricol GROUP BY s.nume ORDER BY AVG(n.valoare) DESC;
 
 11. Modificați interogarea anterioară pentru a afișa pentru elevii fără nici o notă media 0.
-	SELECT s.nume, AVG(NVL(n.valoare,0)) AS "media" FROM studenti s LEFT JOIN note n ON s.nr_matricol=n.nr_matricol ORDER BY AVG(n.valoare) DESC;
+	SELECT s.nume, AVG(NVL(n.valoare,0)) AS "media" FROM studenti s LEFT JOIN note n ON s.nr_matricol=n.nr_matricol GROUP BY s.nume ORDER BY AVG(n.valoare) DESC;
 
 12. Modificati interogarea de mai sus pentru a afisa doar studentii cu media mai mare ca 8.
 	SELECT s.nume, AVG(n.valoare) AS "media" FROM studenti s LEFT JOIN note n ON s.nr_matricol=n.nr_matricol GROUP BY s.nume, s.nr_matricol HAVING AVG(n.valoare)>8 ORDER BY AVG(n.valoare) DESC;

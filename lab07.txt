@@ -14,7 +14,7 @@
 	SELECT * FORM ( SELECT s.nume, AVG(n.valoare) AS "medie" FROM studenti JOIN note n ON s.nr_matricol=n.nr_matricol GROUP BY s.nume, s.nr_matricol ORDER BY AVG(valoare) DESC) WHERE ROWNUM<4;
 
 6. Afișați numele studentului (studenților) cu cea mai mare medie precum și valoarea mediei (atenție: limitarea numărului de linii poate elimina studenții de pe poziții egale; găsiți altă soluție).
-	SELECT s.nume, s.prenume, AVG(n.valoare) FROM studenti JOIN note n ON s.nr_matricol=n.nr_matricol GROUP BY s.nr_matricol, s.nume, s.prenume HAVING AVG(n.valoare)=(SELECT MAX(AVG(n.valoare)) FROM studenti JOIN note n ON s.nr_matricol=n.nr_matricol GROUP BY nr_matricol);
+	SELECT s.nume, AVG(n.valoare) FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol GROUP BY s.nume, s.nr_matricol HAVING AVG(n.valoare)=(SELECT MAX(AVG(n.valoare)) from studenti s JOIN note n ON n.nr_matricol=s.nr_matricol GROUP BY s.nume, s.nr_matricol);
 
 7. Afişaţi numele şi prenumele tuturor studenţilor care au luat aceeaşi nota ca şi Ciprian Ciobotariu la materia Logică. Excludeţi-l pe acesta din listă. (Se știe în mod cert că există un singur Ciprian Ciobotariu și că acesta are o singură notă la logică)
 	SELECT nume, prenume FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol WHERE valoare = (SELECT valoare FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol JOIN cursuri c ON n.id_curs=c.id_curs WHERE (nume,prenume,titlu_curs) = (('Ciobotariu','Ciprian','Logica')) AND s.nr_matricol <>(SELECT nr_matricol FROM studenti WHERE (nume, prenume) = (('Ciobotariu ','Ciprian');
